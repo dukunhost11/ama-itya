@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Untuk Ityaa 🌙</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --rose: #c9626a;
+  --blush: #f2d7da;
+  --cream: #fdf6f0;
+  --deep: #1a0a0f;
+  --text: #3a2530;
+  --gold: #c4956a;
+  --muted: #9a7a80;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--cream);
+  color: var(--text);
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* ── PETALS ── */
+#particles {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 0; overflow: hidden;
+}
+.petal {
+  position: absolute; width: 8px; height: 8px;
+  border-radius: 50% 0 50% 0; background: var(--rose);
+  opacity: 0; animation: fall linear infinite;
+}
+@keyframes fall {
+  0%   { transform: translateY(-20px) rotate(0deg); opacity:.6; }
+  100% { transform: translateY(110vh) rotate(360deg); opacity:0; }
+}
+
+/* ── LOCK SCREEN ── */
+#lock-screen {
+  position: fixed; inset: 0; z-index: 1000;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: var(--deep); padding: 30px;
+}
+.lock-bg {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 30% 60%, rgba(201,98,106,.25) 0%, transparent 60%),
+              radial-gradient(ellipse at 80% 20%, rgba(196,149,106,.15) 0%, transparent 50%);
+}
+.lock-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.4rem, 5vw, 2.2rem);
+  color: var(--blush); text-align: center;
+  margin-bottom: 8px; position: relative; z-index: 1; line-height: 1.4;
+}
+.lock-hint {
+  color: var(--muted); font-size: .85rem;
+  margin-bottom: 40px; letter-spacing: .05em; position: relative; z-index: 1;
+}
+.pin-display {
+  display: flex; gap: 12px; margin-bottom: 35px; position: relative; z-index: 1;
+}
+.pin-dot {
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 2px solid var(--muted); background: transparent; transition: all .3s ease;
+}
+.pin-dot.filled {
+  background: var(--rose); border-color: var(--rose);
+  box-shadow: 0 0 10px rgba(201,98,106,.6);
+}
+.pin-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 12px; width: 260px; position: relative; z-index: 1;
+}
+.pin-btn {
+  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 14px; color: white; font-size: 1.5rem;
+  font-family: 'Lato', sans-serif; font-weight: 300; padding: 18px;
+  cursor: pointer; transition: all .2s ease; backdrop-filter: blur(10px);
+}
+.pin-btn:hover { background: rgba(201,98,106,.2); border-color: var(--rose); transform: scale(1.05); }
+.pin-btn:active { transform: scale(.95); }
+.pin-btn.del { font-size: 1rem; color: var(--muted); }
+.pin-error {
+  color: #ff6b6b; font-size: .8rem; margin-top: 16px;
+  opacity: 0; transition: opacity .3s; position: relative; z-index: 1;
+}
+.pin-error.show { opacity: 1; animation: shake .4s ease; }
+@keyframes shake {
+  0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)}
+  40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)}
+}
+
+/* ── HELLO SCREEN ── */
+#hello-screen {
+  display: none; position: fixed; inset: 0; z-index: 900;
+  background: var(--deep); align-items: center; justify-content: center;
+  flex-direction: column; text-align: center; padding: 40px;
+}
+#hello-screen.show { display: flex; }
+.hello-msg {
+  font-family: 'Playfair Display', serif; font-size: clamp(1rem, 3.5vw, 1.4rem);
+  color: var(--blush); line-height: 1.9; max-width: 600px;
+  opacity: 0; transform: translateY(20px); animation: fadeUp .8s ease .3s forwards;
+}
+.hello-name {
+  font-family: 'Playfair Display', serif; font-size: clamp(2rem, 8vw, 4rem);
+  color: var(--rose); margin: 30px 0 10px;
+  opacity: 0; animation: fadeUp .8s ease .9s forwards;
+}
+.hello-sub {
+  color: var(--muted); font-size: .9rem; letter-spacing: .15em; text-transform: uppercase;
+  opacity: 0; animation: fadeUp .8s ease 1.2s forwards;
+}
+.enter-btn {
+  margin-top: 50px; padding: 16px 50px; background: var(--rose);
+  border: none; border-radius: 50px; color: white;
+  font-family: 'Playfair Display', serif; font-size: 1rem; cursor: pointer;
+  letter-spacing: .05em; opacity: 0; animation: fadeUp .8s ease 1.6s forwards;
+  transition: all .3s; position: relative; z-index: 1;
+}
+.enter-btn:hover { background: #b05560; transform: translateY(-2px); box-shadow: 0 10px 30px rgba(201,98,106,.4); }
+
+@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+/* ── MINI MUSIC PLAYER (pojok kanan bawah, tidak bisa ditutup) ── */
+#music-widget {
+  position: fixed; bottom: 20px; right: 20px;
+  z-index: 9999; width: 280px;
+  display: none;
+}
+#music-widget.show { display: block; }
+
+/* pill (collapsed) */
+#mini-pill {
+  display: none; align-items: center; gap: 10px;
+  background: var(--deep); border-radius: 50px;
+  padding: 10px 14px 10px 16px; cursor: pointer;
+  box-shadow: 0 8px 30px rgba(0,0,0,.4);
+  border: 1px solid rgba(201,98,106,.35); transition: transform .2s;
+}
+#mini-pill.show { display: flex; }
+#mini-pill:hover { transform: translateY(-2px); }
+.pill-heart { font-size: 1rem; animation: hb 1.4s ease infinite; }
+@keyframes hb { 0%,100%{transform:scale(1)} 50%{transform:scale(1.25)} }
+.pill-label { font-size: .75rem; color: var(--blush); font-family: 'Playfair Display', serif; flex: 1; }
+.pill-play {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--rose); border: none; color: white;
+  font-size: .7rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+
+/* expanded card */
+#expanded-card {
+  background: white; border-radius: 18px;
+  padding: 16px 16px 12px; box-shadow: 0 12px 50px rgba(0,0,0,.2);
+  border: 1px solid rgba(201,98,106,.1);
+  animation: slideUp .35s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes slideUp { from{transform:translateY(16px);opacity:0} to{transform:translateY(0);opacity:1} }
+
+.card-top {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
+}
+.card-top-title {
+  font-family: 'Playfair Display', serif; font-size: .82rem; color: var(--deep);
+}
+.collapse-btn {
+  background: none; border: none; font-size: .7rem; color: var(--muted);
+  cursor: pointer; padding: 3px 7px; border-radius: 6px; transition: background .2s;
+}
+.collapse-btn:hover { background: var(--cream); }
+
+.mplayer {
+  background: var(--cream); border-radius: 10px; padding: 10px 12px;
+}
+.minfo { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.mthumb {
+  width: 34px; height: 34px; border-radius: 8px; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--rose), var(--gold));
+  display: flex; align-items: center; justify-content: center; font-size: .95rem;
+}
+.mtitle { font-family: 'Playfair Display', serif; font-size: .82rem; color: var(--deep); }
+.martist { font-size: .68rem; color: var(--muted); }
+
+.mcontrols { display: flex; justify-content: center; gap: 8px; align-items: center; }
+.mbtn {
+  background: none; border: none; font-size: .9rem; cursor: pointer;
+  color: var(--text); transition: transform .15s; padding: 3px;
+}
+.mbtn:hover { transform: scale(1.2); }
+.mbtn.play {
+  width: 34px; height: 34px; background: var(--rose); border-radius: 50%;
+  font-size: .8rem; color: white; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 12px rgba(201,98,106,.4);
+}
+.mbtn.play:hover { background: #b05560; transform: scale(1.05); }
+
+.mbar {
+  height: 3px; background: #e0e0e0; border-radius: 2px;
+  margin-top: 8px; cursor: pointer;
+}
+.mbar-fill { height: 100%; background: var(--rose); border-radius: 2px; width: 0%; transition: width .4s linear; }
+.mtime {
+  display: flex; justify-content: space-between;
+  font-size: .65rem; color: var(--muted); margin-top: 4px;
+}
+.widget-note { font-size: .65rem; color: #ccc; text-align: center; margin-top: 9px; }
+
+/* ── HERO ── */
+.hero {
+  height: 100vh; display: flex; align-items: center; justify-content: center;
+  text-align: center; padding: 30px; position: relative;
+  background: linear-gradient(rgba(26,10,15,.65), rgba(26,10,15,.65)), url('foto-cover.jpg') center/cover;
+  color: white; overflow: hidden;
+}
+.hero-content { position: relative; z-index: 2; }
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 400;
+  margin-bottom: 20px; text-shadow: 0 4px 30px rgba(0,0,0,.4);
+  animation: fadeUp .9s ease both;
+}
+.hero p {
+  max-width: 600px; font-size: 1.05rem; color: rgba(255,255,255,.8);
+  line-height: 1.9; animation: fadeUp .9s ease .3s both;
+}
+.scroll-hint {
+  position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+  color: rgba(255,255,255,.5); font-size: .75rem; letter-spacing: .2em;
+  text-transform: uppercase; animation: bounce 2s ease infinite;
+}
+.scroll-hint::after { content: '↓'; display: block; text-align: center; margin-top: 6px; font-size: 1rem; }
+@keyframes bounce {
+  0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(8px)}
+}
+
+/* ── CONTENT ── */
+.container { max-width: 860px; margin: auto; padding: 80px 25px 120px; position: relative; z-index: 1; }
+.card {
+  background: white; padding: 40px 45px; margin-bottom: 28px;
+  border-radius: 20px; box-shadow: 0 4px 40px rgba(0,0,0,.06);
+  border: 1px solid rgba(201,98,106,.08); position: relative; overflow: hidden;
+}
+.card::before {
+  content: ''; position: absolute; top: 0; left: 0;
+  width: 4px; height: 100%;
+  background: linear-gradient(to bottom, var(--rose), var(--gold));
+}
+.card h2 {
+  font-family: 'Playfair Display', serif; font-size: 1.6rem;
+  font-weight: 400; color: var(--deep); margin-bottom: 22px;
+}
+.card p { font-size: .97rem; line-height: 1.95; color: var(--text); }
+.gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+.gallery img { width: 100%; height: 240px; object-fit: cover; border-radius: 14px; transition: transform .4s ease; }
+.gallery img:hover { transform: scale(1.03); }
+.quote-card {
+  background: linear-gradient(135deg, var(--deep) 0%, #2d1020 100%);
+  color: white; padding: 50px 45px; text-align: center; border: none;
+}
+.quote-card::before { background: transparent; }
+.quote-card p {
+  font-family: 'Playfair Display', serif; font-size: 1.25rem;
+  font-style: italic; color: rgba(255,255,255,.9); line-height: 1.9;
+  max-width: 600px; margin: auto;
+}
+.quote-marks {
+  font-size: 4rem; color: var(--rose); font-family: 'Playfair Display', serif;
+  line-height: .5; display: block; margin-bottom: 20px; opacity: .6;
+}
+footer {
+  text-align: center; padding: 60px 20px 80px;
+  color: var(--muted); font-size: .85rem; letter-spacing: .1em;
+}
+footer span { color: var(--rose); }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--cream); }
+::-webkit-scrollbar-thumb { background: var(--rose); border-radius: 3px; }
+@media(max-width:600px){
+  .card { padding: 28px 22px; }
+  #music-widget { width: 250px; right: 12px; bottom: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div id="particles"></div>
+
+<!-- ══ LOCK SCREEN ══ -->
+<div id="lock-screen">
+  <div class="lock-bg"></div>
+  <p class="lock-title">Khusus untuk kamu, sayang 🌸<br><small style="font-size:.65em;color:var(--muted);">Masukkan tanggal lahirmu (DDMMYYYY)</small></p>
+  <p class="lock-hint">PIN · 8 digit</p>
+  <div class="pin-display" id="pin-display">
+    <div class="pin-dot" id="d0"></div><div class="pin-dot" id="d1"></div>
+    <div class="pin-dot" id="d2"></div><div class="pin-dot" id="d3"></div>
+    <div class="pin-dot" id="d4"></div><div class="pin-dot" id="d5"></div>
+    <div class="pin-dot" id="d6"></div><div class="pin-dot" id="d7"></div>
+  </div>
+  <div class="pin-grid">
+    <button class="pin-btn" onclick="addPin('1')">1</button>
+    <button class="pin-btn" onclick="addPin('2')">2</button>
+    <button class="pin-btn" onclick="addPin('3')">3</button>
+    <button class="pin-btn" onclick="addPin('4')">4</button>
+    <button class="pin-btn" onclick="addPin('5')">5</button>
+    <button class="pin-btn" onclick="addPin('6')">6</button>
+    <button class="pin-btn" onclick="addPin('7')">7</button>
+    <button class="pin-btn" onclick="addPin('8')">8</button>
+    <button class="pin-btn" onclick="addPin('9')">9</button>
+    <button class="pin-btn del" onclick="delPin()">⌫</button>
+    <button class="pin-btn" onclick="addPin('0')">0</button>
+    <button class="pin-btn del" onclick="clearPin()">C</button>
+  </div>
+  <p class="pin-error" id="pin-error">Hmm, coba lagi sayang 🥺</p>
+</div>
+
+<!-- ══ HELLO SCREEN ══ -->
+<div id="hello-screen">
+  <p class="hello-msg">
+    halo sayanggkuu maafin aku baru ngirim sekarang yaa ,<br>
+    karena projek ini baru hari ini selesai tepat pada pukul 03:00 subuh ,<br>
+    ama nyiapin inii darii 3 minggu kemarin buat ityaa 🥺💕
+  </p>
+  <div class="hello-name">Ni Kadek Putri Listya Dewi</div>
+  <p class="hello-sub">ini semua untukmu ✨</p>
+  <button class="enter-btn" onclick="enterMain()">Buka Suratnya →</button>
+</div>
+
+<!-- ══ MINI MUSIC WIDGET (tidak bisa ditutup, bisa dikecilkan) ══ -->
+<div id="music-widget">
+
+  <!-- pill collapsed -->
+  <div id="mini-pill" onclick="expandPlayer()">
+    <span class="pill-heart">💌</span>
+    <span class="pill-label">Lagu untukmu</span>
+    <button class="pill-play" id="pill-play-btn" onclick="event.stopPropagation();togglePlay()">▶</button>
+  </div>
+
+  <!-- card expanded -->
+  <div id="expanded-card">
+    <div class="card-top">
+      <span class="card-top-title">💌 Putar lagu buatanku untukmu</span>
+      <button class="collapse-btn" onclick="collapsePlayer()">▾ kecilkan</button>
+    </div>
+    <div class="mplayer">
+      <div class="minfo">
+        <div class="mthumb">🎵</div>
+        <div>
+          <div class="mtitle">Untuk Ityaa</div>
+          <div class="martist">Lagu dariku · untukmu</div>
+        </div>
+      </div>
+      <div class="mcontrols">
+        <button class="mbtn" onclick="seekBack()">⏮</button>
+        <button class="mbtn play" id="play-btn" onclick="togglePlay()">▶</button>
+        <button class="mbtn" onclick="seekFwd()">⏭</button>
+      </div>
+      <div class="mbar" onclick="seekTo(event)">
+        <div class="mbar-fill" id="bar-fill"></div>
+      </div>
+      <div class="mtime">
+        <span id="cur-time">0:00</span>
+        <span id="dur-time">0:00</span>
+      </div>
+    </div>
+    <p class="widget-note">selalu ada bersamamu 🌙</p>
+  </div>
+
+</div>
+
+<!-- ══ MAIN CONTENT ══ -->
+<main id="main-content" style="display:none;">
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Untuk Kamu</h1>
+      <p>
+        Halaman ini bukan dibuat untuk meminta kamu melupakan semuanya.
+        Aku hanya ingin menyampaikan sesuatu yang selama ini mungkin
+        tidak pernah benar-benar berhasil kusampaikan dengan baik.
+      </p>
+    </div>
+    <div class="scroll-hint">scroll</div>
+  </section>
+
+  <div class="container">
+
+    <div class="card">
+      <h2>Terima Kasih</h2>
+      <p>
+        Terima kasih karena pernah hadir dalam hidupku.
+        Terima kasih untuk perhatian, kesabaran, dan waktu yang kamu berikan.
+        Banyak hal yang dulu kuanggap biasa ternyata adalah hal-hal yang
+        sangat berharga ketika aku melihatnya kembali sekarang.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>Apa yang Aku Sadari</h2>
+      <p>Aku sadar bahwa aku sering membuatmu kecewa. Ada banyak momen ketika kata-kataku tidak sejalan dengan tindakan yang kamu lihat. Mungkin bagiku beberapa hal terlihat kecil, tetapi bagimu hal-hal itu meninggalkan luka yang terus bertambah.</p>
+      <br>
+      <p>Aku juga sadar bahwa aku sering membuatmu cemburu, membuatmu merasa tidak tenang, dan membuatmu mempertanyakan apakah kamu benar-benar dihargai.</p>
+      <br>
+      <p>Kesalahan yang paling sering teringat olehku adalah ketika aku tanpa sengaja menggandeng teman perempuan. Aku tahu yang kamu rasakan saat itu bukan sekadar marah, tetapi kecewa karena merasa tidak dihargai. Sampai sekarang aku masih menyesali momen tersebut.</p>
+    </div>
+
+    <div class="card">
+      <h2>Yang Tidak Pernah Benar-Benar Aku Pahami Dulu</h2>
+      <p>Aku sering fokus menjelaskan niatku, padahal yang lebih penting adalah bagaimana tindakan dan sikapku membuatmu merasa.</p>
+      <br>
+      <p>Aku baru memahami bahwa seseorang bisa terluka bukan hanya karena kesalahan besar, tetapi juga karena kekecewaan kecil yang terjadi berulang kali.</p>
+      <br>
+      <p>Jika selama ini kamu sering menangis karena ulahku, aku tidak ingin membantah perasaan itu. Aku hanya ingin mengakui bahwa aku memang telah membuatmu melalui banyak hal yang seharusnya tidak perlu kamu alami.</p>
+    </div>
+
+    <div class="card">
+      <h2>Kenangan Kita</h2>
+      <div class="gallery">
+        <img src="foto1.jpg" alt="kenangan 1">
+        <img src="foto2.jpg" alt="kenangan 2">
+        <img src="foto3.jpg" alt="kenangan 3">
+        <img src="foto4.jpg" alt="kenangan 4">
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Hari Ini</h2>
+      <p>Aku tidak membuat halaman ini untuk meminta maaf seribu kali, atau untuk memaksamu kembali percaya.</p>
+      <br>
+      <p>Kepercayaan memang tidak dibangun dari tulisan yang indah, tetapi dari tindakan yang konsisten.</p>
+      <br>
+      <p>Aku hanya ingin kamu tahu bahwa aku mengingat kesalahan-kesalahanku, memahami sebagian dari rasa sakit yang pernah kamu rasakan, dan sedang belajar menjadi pribadi yang lebih baik daripada diriku yang dulu.</p>
+    </div>
+
+    <div class="card quote-card">
+      <span class="quote-marks">"</span>
+      <p>
+        Aku tidak meminta kamu melupakan semuanya.
+        Aku hanya berharap suatu hari nanti,
+        ketika kamu melihat ke belakang,
+        kamu tahu bahwa aku benar-benar belajar dari kesalahanku.
+      </p>
+    </div>
+
+  </div>
+
+  <footer>
+    Dibuat dengan kejujuran dan rasa penyesalan yang nyata &mdash; pukul 03:00 subuh, untuk <span>Ni Kadek Putri Listya Dewi</span> 🌙
+  </footer>
+
+</main>
+
+<audio id="audio" src="lagu-untukmu.mp3" preload="auto"></audio>
+
+<script>
+/* ── PETALS ── */
+(function(){
+  const c = document.getElementById('particles');
+  for(let i=0;i<18;i++){
+    const p = document.createElement('div');
+    p.className='petal';
+    p.style.cssText=`left:${Math.random()*100}%;width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;animation-duration:${6+Math.random()*8}s;animation-delay:${Math.random()*8}s;background:hsl(${350+Math.random()*20},${60+Math.random()*20}%,${65+Math.random()*15}%)`;
+    c.appendChild(p);
+  }
+})();
+
+/* ── PIN ── */
+const CORRECT='11012010';
+let current='';
+const MAX=8;
+
+function updateDots(){
+  for(let i=0;i<MAX;i++)
+    document.getElementById('d'+i).classList.toggle('filled',i<current.length);
+}
+function addPin(n){
+  if(current.length>=MAX)return;
+  current+=n; updateDots();
+  if(current.length===MAX)setTimeout(checkPin,250);
+}
+function delPin(){ current=current.slice(0,-1); updateDots(); document.getElementById('pin-error').classList.remove('show'); }
+function clearPin(){ current=''; updateDots(); document.getElementById('pin-error').classList.remove('show'); }
+
+function checkPin(){
+  if(current===CORRECT){
+    const ls=document.getElementById('lock-screen');
+    ls.style.transition='opacity .6s'; ls.style.opacity='0';
+    setTimeout(()=>{ ls.style.display='none'; showHello(); },650);
+  } else {
+    document.getElementById('pin-error').classList.add('show');
+    document.querySelectorAll('.pin-dot').forEach(d=>{ d.style.borderColor='#ff6b6b'; d.style.background='#ff6b6b'; });
+    setTimeout(()=>{ current=''; updateDots(); document.querySelectorAll('.pin-dot').forEach(d=>{ d.style.borderColor=''; d.style.background=''; }); },700);
+  }
+}
+
+/* ── HELLO ── */
+function showHello(){
+  document.getElementById('hello-screen').classList.add('show');
+}
+function enterMain(){
+  const h=document.getElementById('hello-screen');
+  h.style.transition='opacity .6s'; h.style.opacity='0';
+  setTimeout(()=>{
+    h.style.display='none';
+    document.getElementById('main-content').style.display='block';
+    document.getElementById('music-widget').classList.add('show');
+  },600);
+}
+
+/* ── MINI PLAYER ── */
+function collapsePlayer(){
+  document.getElementById('expanded-card').style.display='none';
+  document.getElementById('mini-pill').classList.add('show');
+}
+function expandPlayer(){
+  document.getElementById('mini-pill').classList.remove('show');
+  document.getElementById('expanded-card').style.display='block';
+}
+
+/* ── AUDIO ── */
+const audio=document.getElementById('audio');
+let playing=false;
+
+function setIcon(icon){
+  document.getElementById('play-btn').textContent=icon;
+  document.getElementById('pill-play-btn').textContent=icon;
+}
+function togglePlay(){
+  if(playing){ audio.pause(); setIcon('▶'); }
+  else { audio.play().catch(()=>{}); setIcon('⏸'); }
+  playing=!playing;
+}
+function seekBack(){ audio.currentTime=Math.max(0,audio.currentTime-10); }
+function seekFwd(){  audio.currentTime=Math.min(audio.duration||0,audio.currentTime+10); }
+function seekTo(e){
+  const ratio=e.offsetX/e.currentTarget.offsetWidth;
+  if(audio.duration) audio.currentTime=ratio*audio.duration;
+}
+function fmt(s){ if(isNaN(s))return'0:00'; return`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`; }
+
+audio.addEventListener('timeupdate',()=>{
+  if(!audio.duration)return;
+  document.getElementById('bar-fill').style.width=(audio.currentTime/audio.duration*100)+'%';
+  document.getElementById('cur-time').textContent=fmt(audio.currentTime);
+  document.getElementById('dur-time').textContent=fmt(audio.duration);
+});
+audio.addEventListener('ended',()=>{ playing=false; setIcon('▶'); });
+</script>
+</body>
+</html>
